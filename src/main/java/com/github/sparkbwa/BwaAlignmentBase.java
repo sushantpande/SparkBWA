@@ -144,11 +144,12 @@ public abstract class BwaAlignmentBase implements Serializable {
 		try {
 			//if (outputDir.startsWith("hdfs")) {
 			Configuration conf = new Configuration();
-			FileSystem fs = FileSystem.get(conf);
+		        Path finalHdfsOutputPath = new Path(outputDir + "/" + outputSamFileName	);
+			FileSystem fs = finalHdfsOutputPath.getFileSystem(conf);
 
 			fs.copyFromLocalFile(
 					new Path(this.bwaInterpreter.getOutputFile()),
-					new Path(outputDir + "/" + outputSamFileName)
+					finalHdfsOutputPath
 			);
 			/*} else {
 				File localSamOutput = new File(this.bwaInterpreter.getOutputFile());

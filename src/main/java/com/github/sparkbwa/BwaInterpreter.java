@@ -90,10 +90,13 @@ public class BwaInterpreter {
 	private void setTotalInputLength() {
 		try {
 			// Get the FileSystem
-			FileSystem fs = FileSystem.get(this.conf);
+			Path inputPath = new Path(options.getInputPath());
+			FileSystem fs = inputPath.getFileSystem(this.conf);
+			//FileSystem fs = FileSystem.get(this.conf);
 
 			// To get the input files sizes
-			ContentSummary cSummaryFile1 = fs.getContentSummary(new Path(options.getInputPath()));
+			ContentSummary cSummaryFile1 = fs.getContentSummary(inputPath);
+			//ContentSummary cSummaryFile1 = fs.getContentSummary((options.getInputPath()));
 
 			long lengthFile1 = cSummaryFile1.getLength();
 			long lengthFile2 = 0;
@@ -117,10 +120,10 @@ public class BwaInterpreter {
 	 */
 	private void createOutputFolder() {
 		try {
-			FileSystem fs = FileSystem.get(this.conf);
-
 			// Path variable
 			Path outputDir = new Path(options.getOutputPath());
+			FileSystem fs = outputDir.getFileSystem(this.conf);
+			//FileSystem fs = FileSystem.get(this.conf);
 
 			// Directory creation
 			if (!fs.exists(outputDir)) {
@@ -341,9 +344,9 @@ public class BwaInterpreter {
 		// In the case of use a reducer the final output has to be stored in just one file
 		if(this.options.getUseReducer()) {
 			try {
-				FileSystem fs = FileSystem.get(this.conf);
-
 				Path finalHdfsOutputFile = new Path(this.options.getOutputHdfsDir() + "/FullOutput.sam");
+				FileSystem fs = finalHdfsOutputFile.getFileSystem(this.conf);
+
 				FSDataOutputStream outputFinalStream = fs.create(finalHdfsOutputFile, true);
 
 				// We iterate over the resulting files in HDFS and agregate them into only one file.
